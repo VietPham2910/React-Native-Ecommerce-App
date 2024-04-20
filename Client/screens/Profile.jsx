@@ -42,11 +42,17 @@ const Profile = ({ navigation }) => {
     }
   };
 
-  const deleteAllKeys = async () => {
+  const deleteAppCache = async () => {
     try {
-      const allKeys = await AsyncStorage.getAllKeys();
-      await AsyncStorage.multiRemove(allKeys);
-      console.log("All keys deleted successfully.");
+      const allKeys = await AsyncStorage.getAllKeys()
+      const keyToDel = ['products']
+      for (key of allKeys){
+        if (key.includes("favorites")){
+          keyToDel.push(key)
+        }
+      }
+      await AsyncStorage.multiRemove(keyToDel)
+      console.log("Cache deleted.");
     } catch (error) {
       console.error("Error deleting keys:", error);
     }
@@ -81,7 +87,7 @@ const Profile = ({ navigation }) => {
       "Are you sure you want to clear all saved data on your device?",
       [
         { text: "Cancel", onPress: () => console.log("Cancel pressed") },
-        { text: "Delete", onPress: () => deleteAllKeys() },
+        { text: "Delete", onPress: () => deleteAppCache() },
       ],
       { defaultIndex: 1 } // Index 1 corresponds to the "Delete" button
     );

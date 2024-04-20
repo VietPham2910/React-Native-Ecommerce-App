@@ -2,30 +2,12 @@ import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import React, { useContext, useState } from "react";
 import { SIZES, COLORS, SHADOWS } from "../../constants";
 import { AntDesign } from "@expo/vector-icons";
-import axios from "axios";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from '@react-navigation/native';
 import { CartContext } from "./cartContext";
 
 
-const CartTile = ({ item }) => {
-  const navigation = useNavigation();
+const CartTile = ({ item, onItemDelete}) => {
   const {setCount} = useContext(CartContext)
-
-  deleteCart = async () => {
-    const endpoint = `http://10.0.2.2:3000/api/cart/${item._id}`;
-    
-    try {
-      const response = await axios.delete(endpoint)
-      setCount(response.data.products.length)
-      
-      navigation.navigate("Bottom Navigation")
-      
-    } catch (error) {
-      console.error("Failed to delete cart item:", error);
-    }
-  };
-
 
   return (
     <View>
@@ -51,7 +33,7 @@ const CartTile = ({ item }) => {
         <View>
           <TouchableOpacity
             style={{ paddingBottom: 20, paddingLeft: 75 }}
-            onPress={()=> deleteCart()}
+            onPress={()=> onItemDelete(item)}
           >
             <AntDesign name="delete" size={18} color="red" />
           </TouchableOpacity>

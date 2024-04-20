@@ -16,7 +16,6 @@ const Home = () => {
  const [userLoggedIn, setUserLoggedIn] = useState(false);
  const {count} = useContext(CartContext)
 
-
   useEffect(() => {
     checkUserExistence();
   },[count]);

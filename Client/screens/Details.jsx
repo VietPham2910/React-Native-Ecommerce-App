@@ -17,7 +17,6 @@ const Details = ({ navigation }) => {
   const [favorites, setFavorites] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [count, setCount] = useState(1);
-  const {setCartCount} = useContext(CartContext)
 
   let userId = ''
   
@@ -148,9 +147,6 @@ const Details = ({ navigation }) => {
   };
 
 
-
-
-
   return (
 
     <View style={styles.container}>
@@ -251,7 +247,7 @@ const Details = ({ navigation }) => {
                 <Text style={styles.title('bold', SIZES.large, 10, COLORS.lightWhite)}>BUY NOW</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.addToCart} onPress={() => addToCart(item._id, 1)}>
+              <TouchableOpacity style={styles.addToCart} onPress={() => addToCart(item._id, count)}>
                 <Fontisto name="shopping-bag" size={22} color={COLORS.lightWhite} />
               </TouchableOpacity>
             </View>

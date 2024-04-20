@@ -15,9 +15,7 @@ const fetchOrders = () => {
 
         try {
             const response = await axios.get(`http://10.0.2.2:3000/api/orders/${JSON.parse(id)}`);
- 
-            setData(response.data);
-
+            setData(response.data)
             setLoading(false);
         } catch (error) {
             setError(error);

@@ -1,5 +1,6 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Alert } from 'react-native';
 
 
 const addToCart = async (productId, quantity) => {
@@ -13,6 +14,10 @@ const addToCart = async (productId, quantity) => {
       userId: JSON.parse(id)
     };
      await axios.post(endpoint, data);
+
+     Alert.alert("", "Product added to cart.", [
+      { text: "OK", onPress: () => console.log("Product added") },
+    ],)
     
   } catch (error) {
     throw new Error(error.message);
