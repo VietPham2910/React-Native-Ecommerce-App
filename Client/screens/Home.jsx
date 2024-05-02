@@ -1,24 +1,30 @@
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native'
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, useCallback } from 'react';
 import { COLORS, SIZES } from '../constants'
 import {  Ionicons, Fontisto} from '@expo/vector-icons';
 import { ScrollView } from 'react-native';
 import { Carousel, Headings, ProductRow, Welcome } from '../components';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useFocusEffect  } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { CartContext } from '../components/cart/cartContext';
-
 
 const Home = () => {
  const navigation = useNavigation();
  const [userData, setUserData] = useState(null);
  const [userLoggedIn, setUserLoggedIn] = useState(false);
+ const [refreshCount, setRefreshCount] = useState(0);
  const {count} = useContext(CartContext)
+
+ useFocusEffect(
+  useCallback(() => {
+    setRefreshCount(refreshCount => refreshCount + 1);
+    }, [])
+  );
 
   useEffect(() => {
     checkUserExistence();
-  },[count]);
+  },[]);
   const checkUserExistence = async () => {
     const id = await AsyncStorage.getItem('id');
     const userID = `user${JSON.parse(id)}`
@@ -61,27 +67,35 @@ const Home = () => {
 
   return (
     <SafeAreaView>
+      {console.log("Home screen rerendered: ", refreshCount)}
         <View style={styles.appBarWrapper}>
                 <View style={styles.appBar}>
-                <Ionicons name="location-outline" size={28} color="black" />
-                <Text style={styles.location}>{userData ? userData.location : 'HCM City, Viet Nam'}</Text>
-                    
-            <View style={{ alignItems: "flex-end"}}>
+                  <Text style={styles.location}> 
+                    <Ionicons name="location-outline" size={25} color="black"/> 
+                    {userData ? userData.location : 'HCM City, Viet Nam'}
+                  </Text>                    
+                  <View style={{ alignItems: "flex-end"}}>
                     <View style={styles.cartCounter}>
-                         <Text style={styles.cartNumber}>{count ? count : 0}</Text>
+                        <Text style={styles.cartNumber}>{count ? count : 0}</Text>
                     </View>
-                <TouchableOpacity onPress={()=> handlePress()}>
-                    <Fontisto name="shopping-bag" size={24} color="black" />
-                </TouchableOpacity>
-            </View>
+                    <TouchableOpacity onPress={()=> handlePress()}>
+                        <Fontisto name="shopping-bag" size={24} color="black" />
+                    </TouchableOpacity>
+                  </View>
                 </View>
         </View>
         <ScrollView>
-           <View style={{marginHorizontal: 10}}>
+           <View style={{marginHorizontal: 10, marginBottom: 120}}>
            <Welcome/>
             <Carousel/>
-            <Headings/>
+            <Headings title={"New Rivals"} navigateTo={"Products"}/>
             <ProductRow/>
+            <Headings title={"Working desks"} navigateTo={"Products"}/>
+            <ProductRow category={"desk"}/>
+            <Headings title={"Chairs"} navigateTo={"Products"}/>
+            <ProductRow category={"chair"}/>
+            <Headings title={"Couches"} navigateTo={"Products"}/>
+            <ProductRow category={"couch"}/>
            </View>
         </ScrollView>
     </SafeAreaView>

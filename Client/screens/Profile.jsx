@@ -45,7 +45,7 @@ const Profile = ({ navigation }) => {
   const deleteAppCache = async () => {
     try {
       const allKeys = await AsyncStorage.getAllKeys()
-      const keyToDel = ['products']
+      const keyToDel = ['products', 'desk', 'chair', 'couch']
       for (key of allKeys){
         if (key.includes("favorites")){
           keyToDel.push(key)
@@ -53,6 +53,7 @@ const Profile = ({ navigation }) => {
       }
       await AsyncStorage.multiRemove(keyToDel)
       console.log("Cache deleted.");
+      navigation.navigate("Bottom Navigation");
     } catch (error) {
       console.error("Error deleting keys:", error);
     }
@@ -62,7 +63,7 @@ const Profile = ({ navigation }) => {
     const id = await AsyncStorage.getItem("id");
     const userID = `user${JSON.parse(id)}`;
     try {
-      await AsyncStorage.multiRemove([userID, "token", "id"]);
+      await AsyncStorage.multiRemove([userID, "token", "id", "favorites"]);
       navigation.replace("Bottom Navigation");
     } catch (error) {
       console.error("Error deleting keys:", error);

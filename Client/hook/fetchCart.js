@@ -16,6 +16,7 @@ const fetchCart = () => {
             const newData = JSON.stringify(response.data)
             const parsedCartData = JSON.parse(newData);
             const products = parsedCartData[0].products;
+            console.log("fetched products: ", products)
             setData(products);
             setLoading(false);
         } catch (error) {

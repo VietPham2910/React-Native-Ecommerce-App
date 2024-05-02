@@ -14,7 +14,6 @@ module.exports = {
 
      getUserOrders: async (req, res) => {
         const userId = req.params.id;
-      
         try {
           const userOrders = await Orders.find({ userId })
             .populate('productId') // Populate the 'productId' field

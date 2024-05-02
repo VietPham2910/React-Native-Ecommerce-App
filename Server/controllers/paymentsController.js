@@ -33,14 +33,13 @@ module.exports = {
 
     createPayment: async(req, res) => {
         try {
-            const { name } = req.body;
+            console.log("Creating payment intent...")
             const { amount } = req.body;
-            if (!name && !amount) return res.status(400).json({ message: "Please provide require information" });
+            if (!amount) return res.status(400).json({ message: "Please provide require information" });
             const paymentIntent = await stripe.paymentIntents.create({
               amount: Math.round(amount * 100),
               currency: "USD",
               payment_method_types: ["card"],
-              metadata: { name: name },
             });
             const clientSecret = paymentIntent.client_secret;
             res.json({ message: "Payment initiated", clientSecret });

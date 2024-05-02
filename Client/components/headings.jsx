@@ -5,14 +5,14 @@ import { useNavigation } from '@react-navigation/native';
 
 import { COLORS, SIZES } from '../constants'
 
-const Headings = () => {
+const Headings = ({title, navigateTo}) => {
   const navigation = useNavigation();
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-    <Text style={styles.headerTitle}>New Rivals</Text>
-    <TouchableOpacity onPress={()=> navigation.navigate('New-Rivals')}>
+    <Text style={styles.headerTitle}>{title}</Text>
+    <TouchableOpacity onPress={()=> navigation.navigate(navigateTo, {screenTitle: title})}>
     <Ionicons name="grid" size={24} color="black" />
     </TouchableOpacity>
   </View>

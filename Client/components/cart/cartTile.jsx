@@ -2,13 +2,10 @@ import { StyleSheet, Text, View, TouchableOpacity, Image } from "react-native";
 import React, { useContext, useState } from "react";
 import { SIZES, COLORS, SHADOWS } from "../../constants";
 import { AntDesign } from "@expo/vector-icons";
-import { useNavigation } from '@react-navigation/native';
 import { CartContext } from "./cartContext";
 
 
 const CartTile = ({ item, onItemDelete}) => {
-  const {setCount} = useContext(CartContext)
-
   return (
     <View>
       <TouchableOpacity style={styles.container}>
@@ -37,10 +34,10 @@ const CartTile = ({ item, onItemDelete}) => {
           >
             <AntDesign name="delete" size={18} color="red" />
           </TouchableOpacity>
-
+{/* 
           <TouchableOpacity onPress={() => {}} style={styles.checkoutBtn}>
             <Text style={styles.checkOutText}>CHECKOUT </Text>
-          </TouchableOpacity>
+          </TouchableOpacity> */}
         </View>
       </TouchableOpacity>
     </View>

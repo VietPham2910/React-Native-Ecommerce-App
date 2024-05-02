@@ -8,6 +8,7 @@ module.exports = {
     try {
       // Check if the cart already exists for the user
       const cart = await Cart.findOne({ userId });
+      console.log(cart)
 
       if (cart) {
         // Check if the cartItem already exists in the cart
@@ -17,10 +18,10 @@ module.exports = {
 
         if (existingProduct) {
           // Increment the quantity if the cartItem exists
-          existingProduct.quantity += 1;
+          existingProduct.quantity += quantity;
         } else {
           // Add the new product to the cart
-          cart.products.push({ cartItem, quantity: 1 });
+          cart.products.push({ cartItem, quantity: quantity });
         }
 
         // Save the updated cart
@@ -30,13 +31,14 @@ module.exports = {
         // Create a new cart and add the product
         const newCart = new Cart({
           userId,
-          products: [{ cartItem, quantity: 1 }],
+          products: [{ cartItem, quantity: quantity }],
         });
   
         const savedCart = await newCart.save();
         res.status(200).json("Product added to cart");
       }
     } catch (err) {
+      console.log(err)
       res.status(500).json(err);
     }
   },
@@ -46,6 +48,8 @@ module.exports = {
     try {
       const cart = await Cart.find({ userId: req.params.id })
         .populate('products.cartItem', "_id title imageUrl price supplier");
+      
+      console.log(cart)
 
       res.status(200).json(cart);
     } catch (err) {
@@ -55,7 +59,7 @@ module.exports = {
 
    deleteCartItem: async (req, res) => {
     const cartItemId = req.params.cartItem;
-  
+    console.log(cartItemId)
     try {
       const updatedCart = await Cart.findOneAndUpdate(
         { 'products._id': cartItemId },

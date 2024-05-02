@@ -13,9 +13,22 @@ module.exports = {
 
     getAllProducts: async (req, res) => {
         try {
-            const products = await Product.find().sort({ createdAt: -1})
+            //Expect query param like this: ?Category=Desk or ?sortBy=createdAt&order=1
+            const queryObj = {}
+            const sortObj = {}
+            for (key in req.query){
+                if (key === "category"){
+                    queryObj[key] = req.query[key]
+                }
+                else if (key === "sortBy"){
+                    sortObj[req.query[key]] = req.query.order
+                }
+            }
+            console.log(req.query)
+            console.log(queryObj)
+            console.log(sortObj)
+            const products = await Product.find(queryObj).sort(sortObj)
             res.status(200).json(products)
-            console.log(products)
         } catch (error) {
             res.status(500).json(error)
         }

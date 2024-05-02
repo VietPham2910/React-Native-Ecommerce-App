@@ -12,8 +12,8 @@ import { COLORS, SIZES } from "../../constants";
 import useFetch from "../../hook/useFetch";
 import ProductCardView from "../ProductViewCard";
 
-const ProductRow = () => {
-  const { data, isLoading, error} = useFetch()
+const ProductRow = ({category, sort, order=1}) => {
+  const { data, isLoading, error} = useFetch(category, sort, order)
   return (
     <View style={styles.container}>
       <View style={styles.cardsContainer}>

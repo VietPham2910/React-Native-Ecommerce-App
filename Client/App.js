@@ -87,7 +87,7 @@ export default function App() {
           />
 
           <Stack.Screen
-            name='New-Rivals'
+            name='Products'
             component={Products}
             options={{ headerShown: false }}
           />

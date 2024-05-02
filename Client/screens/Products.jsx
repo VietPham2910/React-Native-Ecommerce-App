@@ -6,7 +6,7 @@ import { COLORS, SIZES } from '../constants';
 import { AnimatedTitle, ProductList } from '../components';
 
 
-const Products = ({ navigation }) => {
+const Products = ({ route, navigation}) => {
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.wrapper}>
@@ -17,9 +17,9 @@ const Products = ({ navigation }) => {
                     >
                         <Ionicons name="chevron-back-circle" size={30} color={COLORS.lightWhite} />
                     </TouchableOpacity>
-                   <AnimatedTitle/>
+                   <AnimatedTitle title={route.params.screenTitle}/>
                 </View>
-                    <ProductList/>
+                    <ProductList category={route.params.screenTitle}/>
             </View>
         </SafeAreaView>
     )

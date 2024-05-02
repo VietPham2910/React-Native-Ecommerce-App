@@ -4,7 +4,7 @@ import { COLORS } from '../../constants';
 
 const AnimatedText = Animated.createAnimatedComponent(Text);
 
-const AnimatedTitle = () => {
+const AnimatedTitle = ({title}) => {
   const animatedValue = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
@@ -35,7 +35,7 @@ const AnimatedTitle = () => {
           { transform: [{ translateX }] },
         ]}
       >
-        All Products
+        {title}
       </AnimatedText>
     </View>
   );

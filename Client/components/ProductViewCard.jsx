@@ -4,10 +4,31 @@ import { Ionicons } from '@expo/vector-icons';
 import { SIZES, COLORS } from '../constants';
 import { useNavigation } from '@react-navigation/native';
 import addToCart from '../hook/addToCart';
-
+import { CartContext } from '../components/cart/cartContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ProductCardView = ({item}) => {
 const navigation = useNavigation();
+const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+const {count, setCount} = React.useContext(CartContext)
+
+const checkIdInAsyncStorage = async () => {
+  try {
+    const id = await AsyncStorage.getItem('id');
+    if (id){
+      setIsLoggedIn(true);
+
+      userId = id;
+    }
+
+  } catch (error) {
+    console.error(error);
+  }
+} 
+  React.useEffect(() => {
+    checkIdInAsyncStorage();
+  }, []);
+
   return (
     
     <TouchableOpacity onPress={() => navigation.navigate('Details', {item})} >
@@ -21,11 +42,18 @@ const navigation = useNavigation();
       <View style={styles.detailsContainer}>
         <Text style={styles.name} numberOfLines={1}>{item.title}</Text>
         <Text style={styles.supplier}numberOfLines={1}>{item.supplier}</Text>
-        <Text style={styles.price}>${item.price}</Text>
+        <Text style={styles.price}>{item.price}</Text>
       </View>
       <TouchableOpacity
         style={styles.addButton}
-        onPress={() => addToCart(item._id, 1)}
+        onPress={() => {
+          if (isLoggedIn){
+            addToCart(item._id, 1)
+            setCount(count + 1)
+          } else {
+            navigation.navigate("Login")
+          }
+        }}
       >
         <Ionicons name="add-circle" size={35} color={COLORS.primary} />
       </TouchableOpacity>

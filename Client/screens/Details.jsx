@@ -16,9 +16,8 @@ const Details = ({ navigation }) => {
   const [paymentUrl, setPaymentUrl] = useState('');
   const [favorites, setFavorites] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [count, setCount] = useState(1);
-
-  let userId = ''
+  const [cartCount, setCartCount] = useState(1);
+  const {count, setCount} = useContext(CartContext)
   
   const createCheckoutSession = async () => {
     const id = await AsyncStorage.getItem('id');
@@ -37,7 +36,7 @@ const Details = ({ navigation }) => {
             name: item.title,
             id: item._id,
             price: item.price,
-            cartQuantity: count,
+            cartQuantity: cartCount,
           },
         ],
       }),
@@ -82,9 +81,11 @@ const Details = ({ navigation }) => {
   const checkIdInAsyncStorage = async () => {
     try {
       const id = await AsyncStorage.getItem('id');
-      setIsLoggedIn(true);
-
-      userId = id;
+      if (id){
+        setIsLoggedIn(true);
+  
+        userId = id;
+      }
 
     } catch (error) {
       console.error(error);
@@ -137,12 +138,12 @@ const Details = ({ navigation }) => {
   };
 
   const increment = () => {
-    setCount(count + 1);
+    setCartCount(cartCount + 1);
   };
 
   const decrement = () => {
-    if (count > 1) {
-      setCount(count - 1);
+    if (cartCount > 1) {
+      setCartCount(cartCount - 1);
     }
   };
 
@@ -184,7 +185,7 @@ const Details = ({ navigation }) => {
             <View style={styles.titleRow(20, 20, SIZES.width - 44)}>
               <Text style={styles.title('bold', SIZES.large)}>{item.title}</Text>
               <View style={styles.priceWrapper}>
-                <Text style={styles.title('semibold', SIZES.large, 10)}> $ {item.price}</Text>
+                <Text style={styles.title('semibold', SIZES.large, 10)}> {item.price}</Text>
               </View>
 
             </View>
@@ -207,7 +208,7 @@ const Details = ({ navigation }) => {
                 <TouchableOpacity onPress={()=> increment()}>
                   <SimpleLineIcons name="plus" size={20} color="black" />
                 </TouchableOpacity>
-                <Text>   {count}   </Text>
+                <Text>   {cartCount}   </Text>
                 <TouchableOpacity onPress={()=> decrement()}>
                   <SimpleLineIcons name="minus" size={20} color="black" />
                 </TouchableOpacity>
@@ -247,7 +248,13 @@ const Details = ({ navigation }) => {
                 <Text style={styles.title('bold', SIZES.large, 10, COLORS.lightWhite)}>BUY NOW</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.addToCart} onPress={() => addToCart(item._id, count)}>
+              <TouchableOpacity style={styles.addToCart} onPress={() => {
+                  if (isLoggedIn){
+                    addToCart(item._id, cartCount)
+                    setCount(count + cartCount)
+                  } else {
+                    navigation.navigate('Login');
+                  }}}>
                 <Fontisto name="shopping-bag" size={22} color={COLORS.lightWhite} />
               </TouchableOpacity>
             </View>

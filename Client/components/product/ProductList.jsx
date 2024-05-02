@@ -4,8 +4,21 @@ import ProductCardView from '../ProductViewCard';
 import useFetch from "../../hook/useFetch";
 import { COLORS, SIZES } from '../../constants';
 
-const ProductList = () => {
-  const { data, isLoading, error } = useFetch();
+const ProductList = ({category}) => {
+  switch (category) {
+    case "Working desks":
+      category = "desk";
+      break;
+    case "Chairs":
+      category = "chair";
+      break;
+    case "Couches":
+      category = "couch"
+      break;
+    default:
+      category = null
+  }
+  const { data, isLoading, error } = useFetch(category);
 
   if (isLoading) {
     return (

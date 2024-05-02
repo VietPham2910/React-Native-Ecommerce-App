@@ -4,11 +4,16 @@ import { COLORS, SIZES } from '../constants'
 import { Ionicons } from '@expo/vector-icons';
 import { CartList } from '../components';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import useForceUpdate from 'use-force-update';
 
 const Cart = ({navigation}) => {
+  const forceUpdate = useForceUpdate();
+
   return (
     <SafeAreaView
       style={styles.container}>
+      {console.log("Cart rerender")}
+
        <View style={styles.upperRow}>
                     <TouchableOpacity
                         style={{paddingLeft: 0}}
@@ -18,7 +23,7 @@ const Cart = ({navigation}) => {
                     </TouchableOpacity>
                     <Text style={styles.title}> Cart </Text>
                 </View>
-          <CartList />  
+          <CartList forceUpdateCart={forceUpdate} />  
     </SafeAreaView>
   )
 }
