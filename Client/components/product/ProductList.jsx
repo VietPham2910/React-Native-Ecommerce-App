@@ -29,7 +29,6 @@ const ProductList = ({category}) => {
   }
 
   return (
-    
     <View style={styles.container}>
       <FlatList
         data={data}
