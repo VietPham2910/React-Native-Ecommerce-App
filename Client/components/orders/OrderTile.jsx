@@ -30,7 +30,7 @@ const OrderTile = ({ item }) => {
               {item.productId.supplier}
             </Text>
             <Text style={styles.supplierTxt} numberOfLines={1}>
-              ${item.productId.price} * {item.quantity}
+              {item.productId.price} * {item.quantity}
             </Text>
           </View>
           <View>

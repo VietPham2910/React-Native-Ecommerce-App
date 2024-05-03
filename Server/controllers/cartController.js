@@ -81,9 +81,11 @@ module.exports = {
   //DELETE
   resetCart: async (req, res) => {
     try {
-      await Cart.findByIdAndDelete(req.params.id);
+      console.log("reset cart triggered")
+      await Cart.findOneAndDelete({ userId: req.params.id });
       res.status(200).json("Cart has been reset");
     } catch (err) {
+      console.log(err)
       res.status(500).json(err);
     }
   },

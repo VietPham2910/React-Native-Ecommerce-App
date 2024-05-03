@@ -6,6 +6,7 @@ import fetchCart from '../../hook/fetchCart';
 import { COLORS, SIZES } from '../../constants';
 import { useStripe } from '@stripe/stripe-react-native';
 import { CartContext } from "./cartContext";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const CartList = ({forceUpdateCart}) => {
   const { data, isLoading, setData} = fetchCart();
@@ -16,27 +17,34 @@ const CartList = ({forceUpdateCart}) => {
   useEffect(()=>{
     setRenderData(data)
   }, [data])
-  // const onCreateOrder = async () => {
-  //   const result = await createOrder({
-  //     items: cartItems,
-  //     subtotal,
-  //     deliveryFee,
-  //     total,
-  //     customer: {
-  //       name: 'Vadim',
-  //       address: 'My home',
-  //       email: 'vadim@notjust.dev',
-  //     },
-  //   });
 
-  //   if (result.data?.status === 'OK') {
-  //     Alert.alert(
-  //       'Order has been submitted',
-  //       `Your order reference is: ${result.data.data.ref}`
-  //     );
-  //     dispatch(cartSlice.actions.clear());
-  //   }
-  // };
+  const onCreateOrder = async () => {
+    const id = await AsyncStorage.getItem('id');
+    const result = await axios.post(`http://10.0.2.2:3000/api/orders/`,{
+      cartItems: JSON.stringify(data),
+      userId: id,
+      delivery_status: "Packaging",
+      payment_status: "Pully paid",
+    });
+
+    if (result.status == 200) {
+      console.log(`http://10.0.2.2:3000/api/cart/${JSON.parse(id)}`)
+      const response = await axios.delete(`http://10.0.2.2:3000/api/cart/reset/${JSON.parse(id)}`)
+      if (response.status != 200){
+        console.log(response.statusText)
+      } else {
+        setCount(0)
+        setData([])
+        forceUpdateCart()
+      }
+      Alert.alert(
+        'Order has been submitted',
+      );
+    }
+     else {
+      Alert.alert(result.statusText);
+     }
+  };
 
   deleteCartItem = async (item) => {
     const endpoint = `http://10.0.2.2:3000/api/cart/${item._id}`;
@@ -103,8 +111,8 @@ const CartList = ({forceUpdateCart}) => {
       return;
     }
 
-    // 4. If payment ok -> create the order
-    //onCreateOrder();
+    //4. If payment ok -> create the order
+    onCreateOrder();
   };
 
   if (isLoading) {

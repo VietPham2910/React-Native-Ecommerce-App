@@ -6,9 +6,9 @@ import { ColorList } from '../components';
 import { useRoute } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import addToCart from '../hook/addToCart';
-import { WebView } from 'react-native-webview';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import axios from 'axios';
 import { CartContext } from '../components/cart/cartContext';
+import { useStripe } from '@stripe/stripe-react-native';
 
 const Details = ({ navigation }) => {
   const route = useRoute();
@@ -18,48 +18,79 @@ const Details = ({ navigation }) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [cartCount, setCartCount] = useState(1);
   const {count, setCount} = useContext(CartContext)
-  
-  const createCheckoutSession = async () => {
-    const id = await AsyncStorage.getItem('id');
-    console.log(id);
+  const { initPaymentSheet, presentPaymentSheet } = useStripe();
 
-    const response = await fetch('https://paymentorders-production.up.railway.app/stripe/create-checkout-session', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        userId: JSON.parse(id),
-        cartItems: [
-          // Add your cart items here
-          {
-            name: item.title,
-            id: item._id,
-            price: item.price,
-            cartQuantity: cartCount,
-          },
-        ],
-      }),
-    });
-
-    const { url } = await response.json();
-    setPaymentUrl(url);
-  };
-  const onNavigationStateChange = (webViewState) => {
-    const { url } = webViewState;
-    if (url && url.includes('checkout-success')) {
-      navigation.navigate('Bottom Navigation')
-      console.log('Payment successful!');
-    } else if (url && url.includes('cancel')) {
-      navigation.navigate('Bottom Navigation')
-      console.log('Payment canceled!');
-    }
-  };
 
   useEffect(() => {
     checkFavorites();
     checkIdInAsyncStorage();
   }, []);
+
+  const onCreateOrder = async () => {
+    const id = await AsyncStorage.getItem('id');
+    const result = await axios.post(`http://10.0.2.2:3000/api/orders/`,{
+      cartItems: JSON.stringify([{
+        cartItem: item,
+        quantity: cartCount
+      }]),
+      userId: id,
+      delivery_status: "Packaging",
+      payment_status: "Pully paid",
+    });
+
+    if (result.status == 200) {
+      Alert.alert(
+        'Order has been submitted',
+      );
+    }
+     else {
+      Alert.alert(result.statusText);
+     }
+  };
+
+  const onCheckout = async () => {
+    // 1. Create a payment intent
+    let url = 'http://10.0.2.2:3000/api/payments'
+    const data = {
+      amount: (cartCount * parseFloat(item.price.replace("$", ""))).toFixed(2),
+    };
+    console.log("Creating payment intent...")
+    const response = await axios.post(url, data)
+    if (response.error) {
+      Alert.alert('Something went wrong');
+      return;
+    }
+
+    //2. Initialize the Payment sheet
+    console.log("Initialize the Payment sheet...")
+    console.log(response.data)
+    const initResponse = await initPaymentSheet({
+      merchantDisplayName: 'Furniture shop',
+      paymentIntentClientSecret: response.data.clientSecret,
+      customFlow: false,
+    });
+    if (initResponse.error) {
+      console.log(initResponse.error);
+      Alert.alert('Something went wrong');
+      return;
+    }
+
+    // 3. Present the Payment Sheet from Stripe
+    console.log("presenting payment sheet...")
+    const paymentResponse = await presentPaymentSheet();
+
+    if (paymentResponse.error) {
+      Alert.alert(
+        `Error code: ${paymentResponse.error.code}`,
+        paymentResponse.error.message
+      );
+      return;
+    }
+
+    //4. If payment ok -> create the order
+    onCreateOrder();
+  };
+
 
   const checkFavorites = async () => {
     const userId = await AsyncStorage.getItem('id');
@@ -130,7 +161,7 @@ const Details = ({ navigation }) => {
 
   const handlePress = () => {
     if (isLoggedIn) {
-      createCheckoutSession();
+      onCheckout()
     } else {
       // Navigate to the Login page when hasId is false
       navigation.navigate('Login');
@@ -151,14 +182,6 @@ const Details = ({ navigation }) => {
   return (
 
     <View style={styles.container}>
-      {paymentUrl ? (
-        <SafeAreaView style={{flex: 1 , backgroundColor: "white"}}>
-          <WebView
-          source={{ uri: paymentUrl }}
-          onNavigationStateChange={onNavigationStateChange}
-        />
-        </SafeAreaView>
-      ) :
         <View style={styles.wrapper}>
           <View style={styles.upperRow}>
             <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -260,7 +283,6 @@ const Details = ({ navigation }) => {
             </View>
           </View>
         </View>
-      }
     </View>
   )
 }

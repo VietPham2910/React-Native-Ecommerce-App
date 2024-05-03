@@ -49,64 +49,67 @@ export default function App() {
 
 
     //  3. // To add Screens to our stack we use Stack.Screen component
-    <CartProvider>
-      <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen
-            name='Bottom Navigation'
-            component={BottomTabNavigation}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name='Details'
-            component={Details}
-            options={{ headerShown: false }}
-          />
+    <StripeProvider
+    publishableKey="pk_test_TYooMQauvdEDq54NiTphI7jx">
+      <CartProvider>
+        <NavigationContainer>
+          <Stack.Navigator>
+            <Stack.Screen
+              name='Bottom Navigation'
+              component={BottomTabNavigation}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name='Details'
+              component={Details}
+              options={{ headerShown: false }}
+            />
 
-          <Stack.Screen
-            name='Cart'
-            component={Cart}
-            options={{ headerShown: false }}
-          />
+            <Stack.Screen
+              name='Cart'
+              component={Cart}
+              options={{ headerShown: false }}
+            />
 
-          <Stack.Screen
-            name='Orders'
-            component={Orders}
-            options={{ headerShown: false }}
-          />
+            <Stack.Screen
+              name='Orders'
+              component={Orders}
+              options={{ headerShown: false }}
+            />
 
-          <Stack.Screen
-            name='Login'
-            component={LoginPage}
-            options={{ headerShown: false }}
-          />
+            <Stack.Screen
+              name='Login'
+              component={LoginPage}
+              options={{ headerShown: false }}
+            />
 
-          <Stack.Screen
-            name='Signup'
-            component={Signup}
-            options={{ headerShown: false }}
-          />
+            <Stack.Screen
+              name='Signup'
+              component={Signup}
+              options={{ headerShown: false }}
+            />
 
-          <Stack.Screen
-            name='Products'
-            component={Products}
-            options={{ headerShown: false }}
-          />
+            <Stack.Screen
+              name='Products'
+              component={Products}
+              options={{ headerShown: false }}
+            />
 
-          <Stack.Screen
-            name='Favorites'
-            component={Favorites}
-            options={{ headerShown: false }}
-          />
+            <Stack.Screen
+              name='Favorites'
+              component={Favorites}
+              options={{ headerShown: false }}
+            />
 
-          <Stack.Screen
-            name='Profile'
-            component={Profile}
-            options={{ headerShown: false }}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
-    </CartProvider>
+            <Stack.Screen
+              name='Profile'
+              component={Profile}
+              options={{ headerShown: false }}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </CartProvider>
+    </StripeProvider>
   );
 }
 
