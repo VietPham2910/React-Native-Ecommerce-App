@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import * as SplashScreen from "expo-splash-screen";
 import { useFonts } from "expo-font";
 import { useCallback, useContext  } from "react";
+import { StripeProvider } from "@stripe/stripe-react-native";
 import BottomTabNavigation from './navigation/BottomTabNavigation';
 import { Cart, Favorites, Details, Products, LoginPage, Signup, Profile } from './screens';
 import Orders from "./screens/Orders";

@@ -36,6 +36,7 @@ const checkIdInAsyncStorage = async () => {
       <View style={styles.imageContainer}>
         <Image
           source={{ uri:item.imageUrl}}
+          //source={undefined}
           style={styles.image}
         />
       </View>

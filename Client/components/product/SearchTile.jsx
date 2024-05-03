@@ -28,7 +28,7 @@ const navigation = useNavigation();
               {item.supplier}
             </Text>
             <Text style={styles.supplierTxt} numberOfLines={1}>
-              ${item.price}
+              {item.price}
             </Text>
           </View>
           

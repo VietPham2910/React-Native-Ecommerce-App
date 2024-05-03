@@ -13,7 +13,8 @@ import useFetch from "../../hook/useFetch";
 import ProductCardView from "../ProductViewCard";
 
 const ProductRow = ({category, sort, order=1}) => {
-  const { data, isLoading, error} = useFetch(category, sort, order)
+  const { data, isLoading, error, refetch} = useFetch(category, sort, order)
+  //refetch()
   return (
     <View style={styles.container}>
       <View style={styles.cardsContainer}>
