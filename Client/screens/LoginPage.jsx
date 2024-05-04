@@ -75,11 +75,14 @@ const LoginPage = ({ navigation }) => {
         );
         const newData = JSON.stringify(response.data);
         const parsedCartData = JSON.parse(newData);
-        const products = parsedCartData[0].products;
-        const totalItemCount = products.reduce((sum, item) => {
-          return sum + item.quantity;
-        }, 0);
-        setCount(totalItemCount);
+        //console.log(newData)
+        if (parsedCartData){
+          const products = parsedCartData[0].products;
+          const totalItemCount = products.reduce((sum, item) => {
+            return sum + item.quantity;
+          }, 0);
+          setCount(totalItemCount);
+        }
         console.log(userData);
         navigation.replace("Bottom Navigation");
       } catch (error) {
