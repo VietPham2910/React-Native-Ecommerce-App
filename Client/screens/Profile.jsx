@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import {
   View,
   StyleSheet,
@@ -15,10 +15,13 @@ import {
 } from "react-native-vector-icons";
 import { COLORS, SIZES } from "../constants";
 import { StatusBar } from "expo-status-bar";
+import { CartContext } from "../components/cart/cartContext";
+
 
 const Profile = ({ navigation }) => {
   const [userData, setUserData] = useState(null);
   const [userLogin, setUserLogin] = useState(false);
+  const {count, setCount} = useContext(CartContext)
 
   useEffect(() => {
     checkUserExistence();
@@ -64,6 +67,7 @@ const Profile = ({ navigation }) => {
     const userID = `user${JSON.parse(id)}`;
     try {
       await AsyncStorage.multiRemove([userID, "token", "id", "favorites"]);
+      setCount(0)
       navigation.replace("Bottom Navigation");
     } catch (error) {
       console.error("Error deleting keys:", error);
