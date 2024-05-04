@@ -30,7 +30,8 @@ export default Products
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: COLORS.lightWhite
+        backgroundColor: COLORS.lightWhite,
+        marginTop: 20
     },
     wrapper: {
         flex: 1,

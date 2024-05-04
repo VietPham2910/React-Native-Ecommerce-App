@@ -82,7 +82,7 @@ module.exports = {
   resetCart: async (req, res) => {
     try {
       console.log("reset cart triggered")
-      await Cart.findOneAndDelete({ userId: req.params.id });
+      const result = await Cart.updateOne({ userId: req.params.id }, { $set: { products: [] } })
       res.status(200).json("Cart has been reset");
     } catch (err) {
       console.log(err)

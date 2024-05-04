@@ -23,7 +23,9 @@ const Search = () => {
       const response = await axios.get(
         `http://10.0.2.2:3000/api/products/search/${searchKey}`
       );
-      setSearchResults(response.data);
+      if (response.status == 200){
+        setSearchResults(response.data);
+      }
     } catch (error) {
       console.error("Failed to perform search:", error);
     }

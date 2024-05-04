@@ -75,8 +75,8 @@ const LoginPage = ({ navigation }) => {
         );
         const newData = JSON.stringify(response.data);
         const parsedCartData = JSON.parse(newData);
-        //console.log(newData)
-        if (parsedCartData){
+        console.log("Cart fetched: ", parsedCartData)
+        if (parsedCartData.length > 0){
           const products = parsedCartData[0].products;
           const totalItemCount = products.reduce((sum, item) => {
             return sum + item.quantity;
